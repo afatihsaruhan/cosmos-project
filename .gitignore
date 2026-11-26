@@ -58,3 +58,6 @@ typescript
 
 # Built Visual Studio Code Extensions
 *.vsix
+
+# Local Python environments (bridges)
+.venv/

@@ -1,0 +1,41 @@
+# RM3100 serial bridge (GZGN-EIU proof of concept)
+#
+# TEMPORARY LINK: this bridge carries the NUCLEO-H723ZG ST-LINK virtual COM port
+# (USB, CN1) to COSMOS. The flight link is CAN with CSP (GZGN-EIU issue #2); when
+# it arrives, only this bridge changes. The COSMOS side keeps connecting to the
+# same TCP port.
+#
+# Bytes are passed through unchanged (BURST). Packet framing is done in COSMOS
+# by the RM3100 plugin (LENGTH protocol on the CCSDS packet length field).
+# Started with: openc3pycli bridge bridge.txt  (see README.md)
+
+# Board serial port. The by-id path names the ST-LINK by its serial number, so it
+# survives unplug/replug and ttyACM renumbering. Find yours with:
+#   ls /dev/serial/by-id/   (the entry ending in -if02 is the VCP)
+VARIABLE serial_port /dev/serial/by-id/usb-STMicroelectronics_STLINK-V3_0040001E3235511337333439-if02
+
+# UART settings fixed by the firmware: 460800 baud, 8N1, no flow control
+VARIABLE baud_rate 460800
+VARIABLE parity NONE
+VARIABLE stop_bits 1
+VARIABLE data_bits 8
+VARIABLE flow_control NONE
+VARIABLE write_timeout 10.0
+VARIABLE read_timeout nil
+
+# TCP port COSMOS connects to. The RM3100 plugin must use the same port.
+VARIABLE router_port 2950
+
+# Address to listen on. On Linux, containers reach the host as
+# host.docker.internal = the docker0 address (usually 172.17.0.1). Listening only
+# there keeps the bridge off Wi-Fi/VPN networks. Check yours with:
+#   ip -4 addr show docker0
+VARIABLE router_listen_address 172.17.0.1
+
+INTERFACE RM3100_SERIAL_INT openc3/interfaces/serial_interface.py <%= serial_port %> <%= serial_port %> <%= baud_rate %> <%= parity %> <%= stop_bits %> <%= write_timeout %> <%= read_timeout %>
+  OPTION FLOW_CONTROL <%= flow_control %>
+  OPTION DATA_BITS <%= data_bits %>
+
+ROUTER RM3100_SERIAL_ROUTER openc3/interfaces/tcpip_server_interface.py <%= router_port %> <%= router_port %> 10.0 nil BURST
+  ROUTE RM3100_SERIAL_INT
+  OPTION LISTEN_ADDRESS <%= router_listen_address %>
