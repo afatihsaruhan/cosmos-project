@@ -7,7 +7,6 @@ Gem::Specification.new do |s|
     Commands and telemetry of the GZGN-EIU RM3100 proof of concept
     (NUCLEO-H723ZG), carried as raw CCSDS packets through a TCP bridge.
   EOF
-  s.licenses = ['LicenseRef-GZGN-EIU']
   s.authors = ['afatihsaruhan']
   s.homepage = 'https://github.com/afatihsaruhan/cosmos-project'
   s.platform = Gem::Platform::RUBY
@@ -19,7 +18,7 @@ Gem::Specification.new do |s|
     time = Time.now.strftime("%Y%m%d%H%M%S")
     s.version = '0.0.0' + ".#{time}"
   end
-  s.files = Dir.glob("{targets,lib,public,tools,microservices}/**/*") + %w(Rakefile README.md LICENSE.md plugin.txt)
+  s.files = Dir.glob("{targets,lib,public,tools,microservices}/**/*") + %w(Rakefile README.md plugin.txt)
   s.files = s.files.reject { |file| file.include?('__pycache__') }
   s.metadata = { "openc3_cosmos_minimum_version" => "7.4.0" }
 end
