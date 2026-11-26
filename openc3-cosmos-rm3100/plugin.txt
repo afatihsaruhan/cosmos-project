@@ -1,0 +1,20 @@
+# LANGUAGE python
+# GZGN-EIU RM3100 magnetometer (NUCLEO-H723ZG proof of concept)
+
+# Target name shown in COSMOS
+VARIABLE rm3100_target_name RM3100
+
+# Where the RM3100 bridge listens (bridges/rm3100-serial). From inside Docker
+# the host computer is host.docker.internal.
+VARIABLE bridge_host host.docker.internal
+VARIABLE bridge_port 2950
+
+TARGET RM3100 <%= rm3100_target_name %>
+
+# Raw CCSDS byte stream, no sync pattern and no CRC. Packets are cut by the
+# primary header length field: 16 bits at bit offset 32, big-endian, total
+# packet bytes = field + 7. The last LENGTH parameter (True) fills the length
+# field of outgoing commands. A length above 512 bytes is rejected so a
+# corrupted stream disconnects and resynchronizes instead of waiting.
+INTERFACE RM3100_INT openc3/interfaces/tcpip_client_interface.py <%= bridge_host %> <%= bridge_port %> <%= bridge_port %> 10.0 None LENGTH 32 16 7 1 BIG_ENDIAN 0 None 512 True
+  MAP_TARGET <%= rm3100_target_name %>

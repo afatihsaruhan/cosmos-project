@@ -1,0 +1,18 @@
+  # CCSDS primary header (6 bytes) + mission timestamp secondary header (8 bytes).
+  # The firmware does not check the TC sequence count or timestamp.
+  APPEND_PARAMETER CCSDS_VERSION 3 UINT 0 0 0 "CCSDS version, always 0"
+    HIDDEN
+  APPEND_PARAMETER CCSDS_TYPE 1 UINT 1 1 1 "Packet type, 1 = TC"
+    HIDDEN
+  APPEND_PARAMETER CCSDS_SHF 1 UINT 1 1 1 "Secondary header flag, always 1"
+    HIDDEN
+  APPEND_ID_PARAMETER CCSDS_APID 11 UINT <%= apid %> <%= apid %> <%= apid %> "Application process ID"
+    HIDDEN
+  APPEND_PARAMETER CCSDS_SEQFLAGS 2 UINT 3 3 3 "Sequence flags, always 3 (unsegmented)"
+    HIDDEN
+  APPEND_PARAMETER CCSDS_SEQCNT 14 UINT 0 16383 0 "Packet sequence count"
+    HIDDEN
+  APPEND_PARAMETER CCSDS_LENGTH 16 UINT 7 65535 7 "Filled by the LENGTH protocol"
+    HIDDEN
+  APPEND_PARAMETER TIMESTAMP_MS 64 UINT MIN MAX 0 "Command timestamp"
+    HIDDEN

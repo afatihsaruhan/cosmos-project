@@ -1,0 +1,8 @@
+# First-demo commands, written by hand from rm3100_contract.json
+# (GZGN-EIU issue #1 step 4). They will be generated from the contract later.
+
+COMMAND <%= target_name %> CONTINUOUS_START BIG_ENDIAN "Start continuous acquisition (TC APID 0x208). Accepted in IDLE or CONTINUOUS; REPEATED if already running."
+<%= render "_ccsds_tc_header.txt", locals: { apid: 0x208 } %>
+
+COMMAND <%= target_name %> CONTINUOUS_STOP BIG_ENDIAN "Stop continuous acquisition (TC APID 0x209). REPEATED if already idle."
+<%= render "_ccsds_tc_header.txt", locals: { apid: 0x209 } %>

@@ -1,0 +1,6 @@
+LANGUAGE python
+
+# Command and telemetry definitions. Files starting with "_" are partials that
+# are only included through render.
+COMMANDS rm3100_cmd.txt
+TELEMETRY rm3100_tlm.txt

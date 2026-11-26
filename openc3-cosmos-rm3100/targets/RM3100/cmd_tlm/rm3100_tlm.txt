@@ -1,0 +1,45 @@
+# First-demo telemetry, written by hand from rm3100_contract.json
+# (GZGN-EIU issue #1 step 4). All payload fields are big-endian.
+# Packets of other APIDs arrive too and show as UNKNOWN until they are defined.
+
+TELEMETRY <%= target_name %> MEASUREMENT BIG_ENDIAN "RM3100 sample (TM APID 0x110), one per DRDY"
+<%= render "_ccsds_tm_header.txt", locals: { apid: 0x110 } %>
+  APPEND_ITEM SAMPLE_SEQUENCE 32 UINT "Sample counter, pairs with TIMING"
+  # Raw value is sensor counts. The converted value is the nominal field for
+  # cycle count 200 (75 counts/uT, PNI Doc 1017252 V16.0 Table 3-1, typical
+  # gain, not a calibration). It is wrong if the cycle count is changed.
+  APPEND_ITEM X 32 INT "X axis field"
+    POLY_READ_CONVERSION 0 0.0133333333333333
+    UNITS microtesla uT
+    FORMAT_STRING "%.2f"
+  APPEND_ITEM Y 32 INT "Y axis field"
+    POLY_READ_CONVERSION 0 0.0133333333333333
+    UNITS microtesla uT
+    FORMAT_STRING "%.2f"
+  APPEND_ITEM Z 32 INT "Z axis field"
+    POLY_READ_CONVERSION 0 0.0133333333333333
+    UNITS microtesla uT
+    FORMAT_STRING "%.2f"
+  APPEND_ITEM VALID_AXES 8 UINT "Bit mask of valid axes: bit0 X, bit1 Y, bit2 Z"
+
+TELEMETRY <%= target_name %> COMMAND_STATUS BIG_ENDIAN "Outcome of the last processed command (TM APID 0x118), 10 Hz"
+<%= render "_ccsds_tm_header.txt", locals: { apid: 0x118 } %>
+  APPEND_ITEM LAST_TC_APID 16 UINT "APID of the last processed command"
+    FORMAT_STRING "0x%03X"
+  APPEND_ITEM LAST_TC_RESULT 8 UINT "Outcome of the last command"
+    STATE ACK 0 GREEN
+    STATE NACK 1 RED
+    STATE REPEATED 2 YELLOW
+  APPEND_ITEM LAST_TC_ERROR 8 UINT "Failure reason; NONE unless NACK"
+    STATE NONE 0
+    STATE UNKNOWN_COMMAND 1
+    STATE INVALID_PAYLOAD 2
+    STATE INVALID_VALUE 3
+    STATE BUSY 4
+    STATE SPI_ERROR 5
+    STATE VERIFY_FAILED 6
+    STATE TIMEOUT 7
+    STATE BIST_FAILED 8
+  APPEND_ITEM LAST_TC_VALID 8 UINT "0 until the first command outcome after boot"
+    STATE NO 0
+    STATE YES 1

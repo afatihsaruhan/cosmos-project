@@ -1,0 +1,11 @@
+  # CCSDS primary header (6 bytes) + mission timestamp secondary header (8 bytes)
+  APPEND_ITEM CCSDS_VERSION 3 UINT "CCSDS version, always 0"
+  APPEND_ITEM CCSDS_TYPE 1 UINT "Packet type, 0 = TM"
+  APPEND_ITEM CCSDS_SHF 1 UINT "Secondary header flag, always 1"
+  APPEND_ID_ITEM CCSDS_APID 11 UINT <%= apid %> "Application process ID"
+    FORMAT_STRING "0x%03X"
+  APPEND_ITEM CCSDS_SEQFLAGS 2 UINT "Sequence flags, always 3 (unsegmented)"
+  APPEND_ITEM CCSDS_SEQCNT 14 UINT "Per-APID packet sequence count"
+  APPEND_ITEM CCSDS_LENGTH 16 UINT "Bytes after the primary header minus 1"
+  APPEND_ITEM TIMESTAMP_MS 64 UINT "Board time: uptime, or Unix time after SET_TIME"
+    UNITS milliseconds ms
