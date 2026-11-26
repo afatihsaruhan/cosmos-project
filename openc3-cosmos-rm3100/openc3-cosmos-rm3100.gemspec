@@ -7,6 +7,7 @@ Gem::Specification.new do |s|
     Commands and telemetry of the GZGN-EIU RM3100 proof of concept
     (NUCLEO-H723ZG), carried as raw CCSDS packets through a TCP bridge.
   EOF
+  s.licenses = ['LicenseRef-TU']
   s.authors = ['afatihsaruhan']
   s.homepage = 'https://github.com/afatihsaruhan/cosmos-project'
   s.platform = Gem::Platform::RUBY
